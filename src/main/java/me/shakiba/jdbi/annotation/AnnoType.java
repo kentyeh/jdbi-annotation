@@ -137,7 +137,7 @@ abstract class AnnoType {
 
         @Override
         public boolean isDateObject(TemporalType temper) {
-            return temper == null || TemporalType.TIME.equals(temper);
+            return TemporalType.TIME.equals(temper);
         }
     };
     public static AnnoType TimeStamp = new AnnoType() {
@@ -153,7 +153,7 @@ abstract class AnnoType {
 
         @Override
         public boolean isDateObject(TemporalType temper) {
-            return temper == null || TemporalType.TIMESTAMP.equals(temper);
+            return TemporalType.TIMESTAMP.equals(temper);
         }
     };
     public static AnnoType[] primitives = {String, Long, Int, Double, Float,
