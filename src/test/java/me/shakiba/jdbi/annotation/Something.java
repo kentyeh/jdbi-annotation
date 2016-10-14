@@ -1,15 +1,22 @@
 package me.shakiba.jdbi.annotation;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Temporal;
 
 @Entity
 public class Something extends Somesuper {
+
     @Column
     private String name;
 
     @Column
     public Long value;
+
+    @Column
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    public Date version;
 
     @SuppressWarnings("unused")
     private Something() {

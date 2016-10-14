@@ -79,5 +79,5 @@ class AnnoClass<C> {
         return getters;
     }
 
-    private static Logger logger = LoggerFactory.getLogger(AnnoClass.class);
+    private static final Logger logger = LoggerFactory.getLogger(AnnoClass.class);
 }

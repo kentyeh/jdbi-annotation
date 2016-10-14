@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.persistence.Column;
+import javax.persistence.Temporal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +18,16 @@ class AnnoMember {
     private Field field;
     private Method method;
     private Class<?> clazz;
+    private Temporal temporal;
 
     public AnnoMember(Class<?> clazz, Field member) {
         this.clazz = clazz;
         this.field = member;
         this.column = member.getAnnotation(Column.class);
+        this.temporal = member.getAnnotation(Temporal.class);
         this.name = nameOf(member, column);
         try {
-            this.annoType = AnnoType.of(member.getType());
+            this.annoType = temporal == null ? AnnoType.of(member.getType()) : annoType.of(member.getType(), temporal.value());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Unknow member type: "
                     + clazz.getName() + "." + name);
@@ -35,9 +38,10 @@ class AnnoMember {
         this.clazz = clazz;
         this.method = member;
         this.column = member.getAnnotation(Column.class);
+        this.temporal = member.getAnnotation(Temporal.class);
         this.name = nameOf(member, column);
         try {
-            this.annoType = AnnoType.of(member.getParameterTypes()[0]);
+            this.annoType = temporal == null ? AnnoType.of(member.getParameterTypes()[0]) : AnnoType.of(member.getParameterTypes()[0], temporal.value());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Unknow member type: "
                     + clazz.getName() + "." + name);

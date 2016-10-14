@@ -1,5 +1,7 @@
 package me.shakiba.jdbi.annotation;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.skife.jdbi.v2.DBI;
@@ -16,7 +18,7 @@ public class AnnoTest extends Assert {
 
         DBI dbi = new DBI("jdbc:h2:mem:test");
         Handle h = dbi.open();
-        h.execute("create table something (id int primary key, name varchar(100), value bigint)");
+        h.execute("create table something (id int primary key, name varchar(100), value bigint,version timestamp default current_timestamp)");
 
         SomethingDAO dao = dbi.open(SomethingDAO.class);
         dao.insert(brian);
@@ -38,5 +40,10 @@ public class AnnoTest extends Assert {
         assertEquals(actual.id(), expected.id());
         assertEquals(actual.name(), expected.name());
         assertEquals(actual.value, expected.value);
+        Date version = actual.version;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(version);
+        System.out.printf("\033[31mversion=%1$tF %1$tT\033[0m\n", cal);
+        assertTrue(cal.get(Calendar.HOUR) + cal.get(Calendar.MINUTE) + cal.get(Calendar.SECOND) + cal.get(Calendar.MILLISECOND) > 0);
     }
 }
