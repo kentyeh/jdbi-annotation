@@ -1,15 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
-    <groupId>me.shakiba.jdbi</groupId>
+    <groupId>com.github.kentyeh</groupId>
     <artifactId>jdbi-annotation</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.2</version>
     <packaging>jar</packaging>
     <name>jDBI Annotation</name>
     <description>JPA annotation extension for jDBI</description>
@@ -19,7 +13,6 @@
         <license>
             <name>The Apache Software License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
         </license>
     </licenses>
 
@@ -28,6 +21,18 @@
             <id>shakiba</id>
             <name>Ali Shakib</name>
             <url>http://ali.shakiba.me/</url>
+        </developer>
+        <developer>
+            <id>yes2000</id>
+            <name>Kent Yeh</name>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+8</timezone>
+            <properties>
+                <picUrl>http://lh3.googleusercontent.com/-riyCbTcpYdo/AAAAAAAAAAI/AAAAAAAAAAA/47MhS2LUlZo/s48-c-k/photo.jpg</picUrl>
+            </properties>
         </developer>
     </developers>
 
@@ -45,16 +50,20 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
                     <encoding>UTF-8</encoding>
+                    <optimize>true</optimize>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -67,6 +76,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -75,6 +85,16 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <linksource>true</linksource>
+                    <links>
+                        <link>http://docs.oracle.com/javase/8/docs/api/</link>
+                        <link>http://docs.oracle.com/javaee/7/api/</link>
+                        <link>http://docs.spring.io/spring/docs/current/javadoc-api/</link>
+                        <link>http://jdbi.org/apidocs/</link>
+                    </links>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -117,13 +137,23 @@
 
     <profiles>
         <profile>
-            <id>release-sign-artifacts</id>
+            <id>release</id>
             <activation>
                 <property>
                     <name>performRelease</name>
                     <value>true</value>
                 </property>
             </activation>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
             <build>
                 <plugins>
                     <plugin>
@@ -139,22 +169,19 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.7</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>local</id>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>snapshots</id>
-                    <url>http://localhost:8081/nexus/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>releases</id>
-                    <url>http://localhost:8081/nexus/content/repositories/releases</url>
-                </repository>
-            </distributionManagement>
-        </profile>
     </profiles>
-
 </project>
